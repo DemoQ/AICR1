@@ -50,3 +50,28 @@
 .lightText {
   color: #999;
 }
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  font-size: 1rem;
+}
+
+.pageButton {
+  padding: 0.4rem 0.9rem;
+  font-size: 1rem;
+  color: inherit;
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 0.3rem;
+  cursor: pointer;
+}
+
+.pageButton:disabled {
+  color: #999;
+  border-color: #eaeaea;
+  cursor: not-allowed;
+}
