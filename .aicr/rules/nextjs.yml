@@ -1,0 +1,44 @@
+rules:
+  - id: aicr.nextjs.public-env-secret
+    message: >-
+      NEXT_PUBLIC_* variables are inlined into the client bundle. Do not put
+      secrets, tokens or passwords in them.
+    severity: ERROR
+    languages: [javascript, typescript]
+    patterns:
+      - pattern: process.env.$VAR
+      - metavariable-regex:
+          metavariable: $VAR
+          regex: (?i)^NEXT_PUBLIC_.*(SECRET|TOKEN|PASSWORD|PRIVATE|API_KEY).*$
+    metadata:
+      category: security
+      cwe: "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
+
+  - id: aicr.node.fs-path-from-request
+    message: >-
+      A file system path is built from request input. Validate/normalize it to
+      prevent path traversal.
+    severity: ERROR
+    languages: [javascript, typescript]
+    patterns:
+      - pattern-either:
+          - pattern: $FS.$READ(<... $REQ.query ...>, ...)
+          - pattern: $FS.$READ(<... $REQ.body ...>, ...)
+          - pattern: $FS.$READ(<... $REQ.params ...>, ...)
+      - metavariable-regex:
+          metavariable: $READ
+          regex: ^(readFile|readFileSync|createReadStream|writeFile|writeFileSync|readdir|readdirSync|unlink|unlinkSync)$
+    metadata:
+      category: security
+      cwe: "CWE-22: Improper Limitation of a Pathname to a Restricted Directory"
+
+  - id: aicr.node.eval-usage
+    message: Avoid eval()/new Function(); they execute arbitrary code.
+    severity: ERROR
+    languages: [javascript, typescript]
+    pattern-either:
+      - pattern: eval(...)
+      - pattern: new Function(...)
+    metadata:
+      category: security
+      cwe: "CWE-95: Eval Injection"
