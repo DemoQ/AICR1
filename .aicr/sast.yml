@@ -1,0 +1,48 @@
+# AICR SAST configuration (consumed by scripts/aicr_sast.py and .github/workflows/aicr-sast.yml)
+# Every key is optional; omitted keys fall back to the defaults documented in README.md.
+
+# Master switch. Set to false to skip SAST entirely.
+enabled: true
+
+# Semgrep registry rulesets (https://semgrep.dev/explore) or local rule files/dirs.
+rulesets:
+  - p/javascript
+  - p/react
+  - p/nodejs
+  - p/secrets
+
+# Project-specific rules (files or directories of Semgrep YAML rules).
+custom_rules:
+  - .aicr/rules
+
+# Only scan these paths (relative to repo root). Empty = whole repo.
+include:
+  - pages/
+  - lib/
+  - components/
+
+# Never scan these paths / globs.
+exclude:
+  - node_modules/
+  - .next/
+  - out/
+  - public/
+  - "**/*.min.js"
+
+# Rule IDs to ignore. Supports exact IDs, trailing-segment IDs and globs (fnmatch).
+disabled_rules: []
+#  - javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal
+#  - "*.detect-non-literal-regexp"
+
+# Re-grade specific rules: <rule id or glob>: INFO | WARNING | ERROR
+severity_overrides: {}
+#  react-dangerouslysetinnerhtml: ERROR
+
+# Findings below this severity are dropped from the report. INFO | WARNING | ERROR
+min_severity: INFO
+
+# The job fails if any finding is at or above this severity. INFO | WARNING | ERROR | NONE (never fail)
+fail_on: ERROR
+
+# full: report every finding. diff: on pull requests only report findings introduced by the PR.
+scan_mode: diff

@@ -1,0 +1,61 @@
+name: AICR SAST
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sast:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Semgrep
+        run: pip install semgrep==1.180.0 pyyaml==6.0.3
+
+      - name: Test AICR SAST runner
+        run: python -m unittest discover -s scripts/tests -v
+
+      - name: Run AICR SAST
+        id: sast
+        env:
+          AICR_SAST_BASELINE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || '' }}
+        run: python scripts/aicr_sast.py --output-dir aicr-sast-results
+
+      - name: Upload SARIF to code scanning
+        if: always() && hashFiles('aicr-sast-results/results.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v3
+        continue-on-error: true
+        with:
+          sarif_file: aicr-sast-results/results.sarif
+          category: aicr-sast
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aicr-sast-results
+          path: aicr-sast-results/
+          if-no-files-found: ignore
+
+      - name: Comment on PR
+        if: always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && hashFiles('aicr-sast-results/summary.md') != ''
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: aicr-sast
+          path: aicr-sast-results/summary.md
