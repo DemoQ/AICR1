@@ -1,0 +1,26 @@
+[
+  {
+    "id": "nextjs-handbook",
+    "name": "Next.js 实战手册",
+    "price": 59.9,
+    "description": "从零开始掌握 Next.js 静态生成、服务端渲染与动态路由。"
+  },
+  {
+    "id": "react-course",
+    "name": "React 入门视频课程",
+    "price": 129,
+    "description": "20 小时系统讲解 React 组件、Hooks 与状态管理。"
+  },
+  {
+    "id": "mechanical-keyboard",
+    "name": "程序员机械键盘",
+    "price": 399,
+    "description": "87 键热插拔设计，茶轴手感，适合长时间编码。"
+  },
+  {
+    "id": "coffee-mug",
+    "name": "Hello World 马克杯",
+    "price": 39,
+    "description": "350ml 陶瓷马克杯，印有经典 Hello World 代码。"
+  }
+]
