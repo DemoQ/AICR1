@@ -50,3 +50,10 @@
 .lightText {
   color: #999;
 }
+
+.featuredSection {
+  margin-top: 1.5rem;
+  padding: 0.25rem 1rem 0.5rem;
+  border-left: 4px solid #0070f3;
+  background: #f6f8fa;
+}
